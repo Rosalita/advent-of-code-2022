@@ -8,7 +8,7 @@ fn get_input() -> String {
     input
 }
 
-#[derive(Debug, PartialEq)] // Debug added so can print debug
+#[derive(PartialEq)]
 enum Shape {
     Rock,
     Paper,
@@ -16,14 +16,13 @@ enum Shape {
     Unknown,
 }
 
-#[derive(Debug, PartialEq)] // Debug added so can print debug
+#[derive(PartialEq)]
 enum Result {
     Lose,
     Draw,
     Win,
 }
 
-#[derive(Debug)] // Debug added so can print debug
 struct Round {
     opponent: Shape,
     player: Shape,
@@ -46,18 +45,10 @@ fn main() {
         };
 
         match opponent_input {
-            'A' => {
-                this_round.opponent = Shape::Rock;
-            }
-            'B' => {
-                this_round.opponent = Shape::Paper;
-            }
-            'C' => {
-                this_round.opponent = Shape::Scissors;
-            }
-            _ => {
-                this_round.opponent = Shape::Unknown;
-            }
+            'A' => this_round.opponent = Shape::Rock,
+            'B' => this_round.opponent = Shape::Paper,
+            'C' => this_round.opponent = Shape::Scissors,
+            _ => this_round.opponent = Shape::Unknown,
         }
 
         match player_input {
@@ -89,30 +80,18 @@ fn calculate_move(opponent: &Shape, result: Result) -> Shape {
     match opponent {
         Shape::Rock => match result {
             Result::Lose => return Shape::Scissors,
-            Result::Draw => {
-                return Shape::Rock;
-            }
-            Result::Win => {
-                return Shape::Paper;
-            }
+            Result::Draw => return Shape::Rock,
+            Result::Win => return Shape::Paper,
         },
         Shape::Paper => match result {
             Result::Lose => return Shape::Rock,
-            Result::Draw => {
-                return Shape::Paper;
-            }
-            Result::Win => {
-                return Shape::Scissors;
-            }
+            Result::Draw => return Shape::Paper,
+            Result::Win => return Shape::Scissors,
         },
         Shape::Scissors => match result {
             Result::Lose => return Shape::Paper,
-            Result::Draw => {
-                return Shape::Scissors;
-            }
-            Result::Win => {
-                return Shape::Rock;
-            }
+            Result::Draw => return Shape::Scissors,
+            Result::Win => return Shape::Rock,
         },
         _ => return Shape::Unknown,
     }
@@ -122,15 +101,9 @@ fn score_round(round: Round) -> i32 {
     let mut points: i32 = 0;
     // calculate the points for the players shape.
     match round.player {
-        Shape::Rock => {
-            points += 1;
-        }
-        Shape::Paper => {
-            points += 2;
-        }
-        Shape::Scissors => {
-            points += 3;
-        }
+        Shape::Rock => points += 1,
+        Shape::Paper => points += 2,
+        Shape::Scissors => points += 3,
         _ => {}
     }
 

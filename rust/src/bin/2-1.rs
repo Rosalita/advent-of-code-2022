@@ -8,7 +8,7 @@ fn get_input() -> String {
     input
 }
 
-#[derive(Debug, PartialEq)] // Debug added so can print debug
+#[derive(PartialEq)]
 enum Shape {
     Rock,
     Paper,
@@ -16,7 +16,6 @@ enum Shape {
     Unknown,
 }
 
-#[derive(Debug)] // Debug added so can print debug
 struct Round {
     opponent: Shape,
     player: Shape,
@@ -39,33 +38,17 @@ fn main() {
         };
 
         match opponent_input {
-            'A' => {
-                this_round.opponent = Shape::Rock;
-            }
-            'B' => {
-                this_round.opponent = Shape::Paper;
-            }
-            'C' => {
-                this_round.opponent = Shape::Scissors;
-            }
-            _ => {
-                this_round.opponent = Shape::Unknown;
-            }
+            'A' => this_round.opponent = Shape::Rock,
+            'B' => this_round.opponent = Shape::Paper,
+            'C' => this_round.opponent = Shape::Scissors,
+            _ => this_round.opponent = Shape::Unknown,
         }
 
         match player_input {
-            'X' => {
-                this_round.player = Shape::Rock;
-            }
-            'Y' => {
-                this_round.player = Shape::Paper;
-            }
-            'Z' => {
-                this_round.player = Shape::Scissors;
-            }
-            _ => {
-                this_round.player = Shape::Unknown;
-            }
+            'X' => this_round.player = Shape::Rock,
+            'Y' => this_round.player = Shape::Paper,
+            'Z' => this_round.player = Shape::Scissors,
+            _ => this_round.player = Shape::Unknown,
         }
 
         let points = score_round(this_round);
@@ -79,15 +62,9 @@ fn score_round(round: Round) -> i32 {
     let mut points: i32 = 0;
     // calculate the points for the players shape.
     match round.player {
-        Shape::Rock => {
-            points += 1;
-        }
-        Shape::Paper => {
-            points += 2;
-        }
-        Shape::Scissors => {
-            points += 3;
-        }
+        Shape::Rock => points += 1,
+        Shape::Paper => points += 2,
+        Shape::Scissors => points += 3,
         _ => {}
     }
 
