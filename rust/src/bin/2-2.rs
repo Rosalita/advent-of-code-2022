@@ -44,19 +44,19 @@ fn main() {
             player: Shape::Unknown,
         };
 
-        match opponent_input {
-            'A' => this_round.opponent = Shape::Rock,
-            'B' => this_round.opponent = Shape::Paper,
-            'C' => this_round.opponent = Shape::Scissors,
-            _ => this_round.opponent = Shape::Unknown,
-        }
+        this_round.opponent = match opponent_input {
+            'A' => Shape::Rock,
+            'B' => Shape::Paper,
+            'C' => Shape::Scissors,
+            _ => Shape::Unknown,
+        };
 
-        match player_input {
-            'X' => this_round.player = calculate_move(&this_round.opponent, Result::Lose),
-            'Y' => this_round.player = calculate_move(&this_round.opponent, Result::Draw),
-            'Z' => this_round.player = calculate_move(&this_round.opponent, Result::Win),
-            _ => this_round.player = Shape::Unknown,
-        }
+        this_round.player = match player_input {
+            'X' => calculate_move(&this_round.opponent, Result::Lose),
+            'Y' => calculate_move(&this_round.opponent, Result::Draw),
+            'Z' => calculate_move(&this_round.opponent, Result::Win),
+            _ => Shape::Unknown,
+        };
 
         let points = score_round(this_round);
 
