@@ -52,21 +52,10 @@ fn main() {
         }
 
         match player_input {
-            'X' => {
-                let move_to_make = calculate_move(&this_round.opponent, Result::Lose);
-                this_round.player = move_to_make;
-            }
-            'Y' => {
-                let move_to_make = calculate_move(&this_round.opponent, Result::Draw);
-                this_round.player = move_to_make;
-            }
-            'Z' => {
-                let move_to_make = calculate_move(&this_round.opponent, Result::Win);
-                this_round.player = move_to_make;
-            }
-            _ => {
-                this_round.player = Shape::Unknown;
-            }
+            'X' => this_round.player = calculate_move(&this_round.opponent, Result::Lose),
+            'Y' => this_round.player = calculate_move(&this_round.opponent, Result::Draw),
+            'Z' => this_round.player = calculate_move(&this_round.opponent, Result::Win),
+            _ => this_round.player = Shape::Unknown,
         }
 
         let points = score_round(this_round);
