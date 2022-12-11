@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -42,14 +43,24 @@ func main() {
 
 	fs := buildFilesystem(i)
 
-	directories := fs.findDirectories()
+	totalDiskSpace := 70000000
+	freeSpaceRequired := 30000000
+	usedSpace := fs.root.size()
+	currentUnusedSpace := totalDiskSpace - usedSpace
+	neededSpace := freeSpaceRequired - currentUnusedSpace
 
-	total := 0
-	for _, dir := range directories {
-		total += dir.size()
-	}
+	// find all the directories large enough to provide the needed space if deleted.
+	dirs := fs.findDirectories(neededSpace)
 
-	fmt.Println(total)
+	// then find the smallest of these directories.
+	// use sort to order them smallest to largest.
+	sort.Slice(dirs, func(i, j int) bool {
+		return dirs[i].size() < dirs[j].size()
+	})
+
+	// then the directory we are looking for is the first directory in the slice.
+	// Just need to know its size.
+	fmt.Println(dirs[0].size())
 }
 
 type directory struct {
@@ -105,15 +116,15 @@ func (d directory) size() int {
 	return d.totalSize
 }
 
-func (d directory) searchForUnderMax(max int) []*directory {
+func (d directory) searchForAtleast(size int) []*directory {
 	result := []*directory{}
 
-	if d.size() < max {
+	if d.size() >= size {
 		result = append(result, &d)
 	}
 
 	for _, child := range d.children {
-		result = append(result, child.searchForUnderMax(max)...)
+		result = append(result, child.searchForAtleast(size)...)
 	}
 
 	return result
@@ -191,11 +202,10 @@ func newFilesystem() filesystem {
 	}
 }
 
-func (f *filesystem) findDirectories() []*directory {
+func (f *filesystem) findDirectories(size int) []*directory {
 	dirs := []*directory{}
-	max := 100000
 
-	dirs = append(dirs, f.root.searchForUnderMax(max)...)
+	dirs = append(dirs, f.root.searchForAtleast(size)...)
 	return dirs
 }
 
