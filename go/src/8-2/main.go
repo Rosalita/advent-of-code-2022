@@ -24,84 +24,58 @@ type forest struct {
 }
 
 func (f forest) countVisbleTrees() {
-	visible := 0
+	maxScore := 0
 	// loop over every tree
 	for x, row := range f.trees {
 		for y, tree := range row {
-			// dont need to check first row as they are all visible
-			if x == 0 {
-				visible += 1
-				continue
-			}
+			score := f.score(tree, x, y)
 
-			// dont need to check the last row of trees as they are all visible
-			if x == len(f.trees)-1 {
-				visible += 1
-				continue
-			}
-
-			// dont need to check first tree in a row as they are all visible
-			if y == 0 {
-				visible += 1
-				continue
-			}
-
-			// don't need to check last tree in a row as they are all visivle
-			if y == len(f.trees[0])-1 {
-				visible += 1
-				continue
-			}
-
-			if f.isVisible(tree, x, y){
-				visible += 1
+			if score > maxScore {
+				maxScore = score
 			}
 		}
 	}
-	fmt.Println(visible)
+	fmt.Println(maxScore)
 }
 
-func (f forest) isVisible(tree, x, y int) bool {
+func (f forest) score(tree, x, y int) int {
+	northScore := 0
 	// walk north, x decreases, y stays same
 	for i := x - 1; i >= 0; i-- {
+		northScore += 1
 		if f.trees[i][y] >= tree {
 			break
 		}
-		if i == 0 {
-			return true
-		}
 	}
 
+	southScore := 0
 	// walk south, x increases, y stays same
 	for i := x + 1; i < len(f.trees); i++ {
+		southScore += 1
 		if f.trees[i][y] >= tree {
 			break
 		}
-		if i == len(f.trees)-1 {
-			return true
-		}
 	}
 
+	eastScore := 0
 	// walk east, y increases, x stays same
 	for i := y - 1; i >= 0; i-- {
+		eastScore += 1
 		if f.trees[x][i] >= tree {
 			break
 		}
-		if i == 0 {
-			return true
-		}
 	}
 
+	westScore := 0
 	// walk west, y decreases, x stays same
 	for i := y + 1; i < len(f.trees[0]); i++ {
+		westScore += 1
 		if f.trees[x][i] >= tree {
-			return false
-		}
-		if i == len(f.trees[0])-1 {
-			return true
+			break
 		}
 	}
 
-	return false
+	return northScore * southScore * eastScore * westScore
 }
 
 func getInput() string {
